@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PaperGen</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-light: #f3f4f6;
+            --white: #ffffff;
+            --text: #1f2937;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg-light); 
+            display: flex; 
+            flex-direction: column; /* Mobile first: Column */
+            height: 100vh; 
+            overflow: hidden; /* Prevent body scroll on desktop */
+        }
+
+        /* --- Sidebar (Inputs) --- */
+        .sidebar {
+            background: var(--white);
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .logo { 
+            font-size: 1.25rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        
+        label { 
+            display: block; 
+            font-size: 0.85rem; 
+            font-weight: 600;
+            color: #4b5563; 
+            margin-bottom: 6px; 
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px; /* Prevents zoom on iPhone */
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea { height: 100px; resize: vertical; }
+
+        .ai-prompt-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #1e40af;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-gen { background: var(--primary); color: white; }
+        .btn-gen:hover { background: var(--primary-hover); }
+        .btn-gen:disabled { background: #93c5fd; cursor: not-allowed; }
+        
+        .btn-down { 
+            background: #e5e7eb; 
+            color: #374151; 
+            margin-top: 10px; 
+            display: none; 
+            border: 1px solid #d1d5db;
+        }
+        .btn-down:hover { background: #d1d5db; }
+
+        /* --- Preview Area --- */
+        .preview-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .paper-sheet {
+            background: white;
+            width: 100%;
+            max-width: 210mm; /* A4 Width */
+            min-height: 297mm; /* A4 Height */
+            padding: 25mm 20mm; /* A4 Margins */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-family: 'Times New Roman', Times, serif;
+            position: relative;
+        }
+
+        /* Paper Styles */
+        .header-text { text-align: center; line-height: 1.4; color: black; }
+        .school-name { font-size: 14pt; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
+        .sub-header { font-size: 10pt; font-style: italic; margin-bottom: 4px;}
+        .location { font-weight: bold; font-size: 12pt; margin-bottom: 15px; }
+        .exam-title { font-weight: bold; font-size: 12pt; margin: 15px 0; border-bottom: 1px solid transparent; }
+        
+        .meta-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            border-bottom: 2px solid black; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px; 
+        }
+        .meta-table td { 
+            font-weight: bold; 
+            padding: 5px 0; 
+            font-size: 11pt;
+            vertical-align: bottom;
+        }
+        .text-right { text-align: right; }
+
+        #paper-content { 
+            white-space: pre-wrap; 
+            line-height: 1.5; 
+            font-size: 12pt; 
+            text-align: justify;
+        }
+
+        #loading { 
+            text-align: center; 
+            display: none; 
+            color: var(--primary); 
+            margin-top: 10px; 
+            font-weight: 500;
+        }
+
+        /* --- DESKTOP VIEW (Min-width: 768px) --- */
+        @media (min-width: 768px) {
+            body { flex-direction: row; }
+            
+            .sidebar {
+                width: 380px;
+                height: 100vh;
+                border-right: 1px solid var(--border);
+                border-bottom: none;
+            }
+
+            .preview-container {
+                height: 100vh;
+                padding: 40px;
+            }
+        }
+
+        /* --- MOBILE TWEAKS --- */
+        @media (max-width: 767px) {
+            body { overflow: auto; height: auto; } /* Allow scrolling entire page on mobile */
+            
+            .sidebar { width: 100%; height: auto; }
+            
+            .preview-container { 
+                padding: 10px; 
+                height: auto; 
+                min-height: 500px;
+            }
+
+            .paper-sheet {
+                padding: 15mm;
+                font-size: 90%; /* Scale text slightly down for small screens */
+                min-height: 400px; /* Smaller visual height on phone */
+            }
+            
+            .school-name { font-size: 12pt; }
+            .location { font-size: 10pt; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">📄 AI PaperGen</div>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Subject</label>
+                <input type="text" id="subject" value="Business Studies">
+            </div>
+            <div class="form-group">
+                <label>Class/Section</label>
+                <input type="text" id="grade" value="XII IEC & PEC">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Test Name</label>
+                <input type="text" id="testName" value="Revision Test - XI">
+            </div>
+            <div class="form-group">
+                <label>Acad. Year</label>
+                <input type="text" id="year" value="2025-26">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Time</label>
+                <input type="text" id="time" value="40min">
+            </div>
+            <div class="form-group">
+                <label>Max Marks</label>
+                <input type="text" id="marks" value="20">
+            </div>
+        </div>
+
+        <div class="form-group">
+             <label>AI Prompt</label>
+            <div class="ai-prompt-box">
+                <strong>Tip:</strong> Be specific. e.g. "Create 5 MCQs and 2 long answer questions on Chapter 3."
+            </div>
+            <textarea id="prompt" placeholder="Describe the test you want..."></textarea>
+        </div>
+
+        <button class="btn-gen" onclick="generatePaper()">✨ Generate Paper</button>
+        <div id="loading">Generating Questions... <span style="font-size:1.2em;">⏳</span></div>
+
+        <form id="downloadForm" action="/download" method="POST" target="_blank">
+            <input type="hidden" name="subject" id="d-subject">
+            <input type="hidden" name="grade" id="d-grade">
+            <input type="hidden" name="testName" id="d-testName">
+            <input type="hidden" name="year" id="d-year">
+            <input type="hidden" name="time" id="d-time">
+            <input type="hidden" name="marks" id="d-marks">
+            <input type="hidden" name="content" id="d-content">
+            <button type="submit" class="btn-down" id="downloadBtn">⬇ Download Word Doc</button>
+        </form>
+    </div>
+
+    <div class="preview-container">
+        <div class="paper-sheet">
+            <div class="header-text school-name">BHARATIYA VIDYA BHAVAN’S RESIDENTIAL PUBLIC SCHOOL</div>
+            <div class="header-text sub-header">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
+            <div class="header-text location">VIDHYASHRAM – BHIMAVARAM-534201</div>
+            
+            <div class="header-text exam-title"><span id="p-testName">Revision Test</span> – <span id="p-year">2025-26</span></div>
+
+            <table class="meta-table">
+                <tr>
+                    <td>Sub: <span id="p-subject">Business Studies</span></td>
+                    <td class="text-right">Time: <span id="p-time">40min</span></td>
+                </tr>
+                <tr>
+                    <td>Class: <span id="p-grade">XII</span></td>
+                    <td class="text-right">Marks: <span id="p-marks">20</span></td>
+                </tr>
+            </table>
+
+            <div id="paper-content">
+                <p style="color: #6b7280; text-align: center; margin-top: 50px;">
+                    <i>Enter details on the left (or top on mobile) and click "Generate" to see the preview here.</i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function generatePaper() {
+            // Update Preview Header immediately
+            document.getElementById('p-subject').innerText = document.getElementById('subject').value;
+            document.getElementById('p-grade').innerText = document.getElementById('grade').value;
+            document.getElementById('p-testName').innerText = document.getElementById('testName').value;
+            document.getElementById('p-year').innerText = document.getElementById('year').value;
+            document.getElementById('p-time').innerText = document.getElementById('time').value;
+            document.getElementById('p-marks').innerText = document.getElementById('marks').value;
+
+            const btn = document.querySelector('.btn-gen');
+            const loading = document.getElementById('loading');
+            const contentDiv = document.getElementById('paper-content');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // UI State: Loading
+            btn.disabled = true;
+            loading.style.display = 'block';
+            contentDiv.style.opacity = '0.5';
+
+            const payload = {
+                subject: document.getElementById('subject').value,
+                grade: document.getElementById('grade').value,
+                testName: document.getElementById('testName').value,
+                year: document.getElementById('year').value,
+                time: document.getElementById('time').value,
+                marks: document.getElementById('marks').value,
+                prompt: document.getElementById('prompt').value
+            };
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    contentDiv.innerText = data.content;
+                    downloadBtn.style.display = 'block';
+                    
+                    // Fill hidden form for download
+                    document.getElementById('d-subject').value = payload.subject;
+                    document.getElementById('d-grade').value = payload.grade;
+                    document.getElementById('d-testName').value = payload.testName;
+                    document.getElementById('d-year').value = payload.year;
+                    document.getElementById('d-time').value = payload.time;
+                    document.getElementById('d-marks').value = payload.marks;
+                    document.getElementById('d-content').value = data.content;
+                    
+                    // On mobile, scroll to preview
+                    if (window.innerWidth < 768) {
+                        document.querySelector('.preview-container').scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (err) {
+                alert('Failed to connect to server. Check your internet.');
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+                contentDiv.style.opacity = '1';
+            }
+        }
+    </script>
+</body>
+</html>
