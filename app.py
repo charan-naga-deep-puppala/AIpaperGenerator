@@ -23,7 +23,7 @@ def clean_text(text):
     return text.strip()
 
 def generate_paper_content(subject, book, chapters, difficulty, grade, time, marks, prompt_text):
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     # Updated Prompt for Multiple Chapters
     full_prompt = f"""
