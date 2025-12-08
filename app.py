@@ -30,7 +30,7 @@ def clean_text(text):
     return "\n".join(cleaned_lines).strip()
 
 def generate_paper_content(subject, book, chapters, difficulty, grade, time, marks, prompt_text):
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     full_prompt = f"""
     Create a strictly formatted CBSE Class {grade} Exam Question Paper.
