@@ -3,163 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI PaperGen | Multi-Chapter</title>
+    <title>AI PaperGen | Professional</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --bg-page: #f8fafc;
-            --sidebar-bg: #ffffff;
-            --text-main: #1e293b;
-            --border: #e2e8f0;
-            --paper-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --primary: #2563eb;
+            --bg-ui: #f1f5f9;
+            --paper-bg: #ffffff;
+            --text: #1e293b;
         }
-
-        * { box-sizing: border-box; }
 
         body { 
-            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-page); 
-            color: var(--text-main); display: flex; flex-direction: column; 
-            height: 100vh; overflow: hidden;
+            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-ui); 
+            display: flex; height: 100vh; overflow: hidden;
         }
 
-        /* --- SIDEBAR --- */
+        /* SIDEBAR */
         .sidebar {
-            background: var(--sidebar-bg); width: 100%; padding: 20px;
-            border-bottom: 1px solid var(--border); overflow-y: auto;
-            display: flex; flex-direction: column; gap: 15px;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.02); z-index: 10;
+            width: 400px; background: white; padding: 25px; border-right: 1px solid #cbd5e1;
+            display: flex; flex-direction: column; gap: 15px; overflow-y: auto; z-index: 10;
         }
 
-        .brand-text { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
-
-        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
-
-        input[type="text"], select, textarea {
-            width: 100%; padding: 10px; border: 1px solid var(--border);
-            border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        
+        label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: block; }
+        
+        input, select, textarea {
+            width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-size: 0.9rem; font-family: 'Inter', sans-serif;
         }
 
-        /* New Checkbox List Style */
+        /* Checkbox Area */
         .checkbox-container {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            height: 140px;
-            overflow-y: auto;
-            padding: 8px;
-            background: #fff;
+            border: 1px solid #cbd5e1; border-radius: 6px; height: 120px; 
+            overflow-y: auto; padding: 10px; background: #fff;
         }
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 4px 0;
-            font-size: 0.9rem;
-        }
-        .checkbox-item input {
-            width: auto; margin-right: 10px; cursor: pointer;
-        }
-        .checkbox-item label {
-            text-transform: none; font-weight: 400; color: var(--text-main); margin: 0; cursor: pointer;
-        }
+        .checkbox-item { display: flex; align-items: center; margin-bottom: 5px; }
+        .checkbox-item input { width: auto; margin-right: 8px; }
+        .checkbox-item label { text-transform: none; color: var(--text); font-weight: 400; margin: 0; }
 
         .row { display: flex; gap: 10px; }
         .col { flex: 1; }
 
-        .btn-main {
-            background: var(--primary); color: white; border: none; padding: 12px;
-            border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%;
+        button {
+            background: var(--primary); color: white; border: none; padding: 14px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px;
         }
-        .btn-main:hover { background: #4338ca; }
-        .btn-main:disabled { background: #cbd5e1; }
+        button:hover { background: #1d4ed8; }
+        .btn-dl { background: #fff; color: var(--text); border: 1px solid #cbd5e1; display: none; }
+        .btn-dl:hover { background: #f8fafc; }
 
-        .btn-download {
-            background: white; border: 1px solid var(--border); padding: 10px;
-            width: 100%; border-radius: 6px; font-weight: 600; cursor: pointer;
-            display: none; margin-top: 10px;
-        }
-
-        /* --- PREVIEW --- */
-        .preview-container {
-            flex: 1; background: #f1f5f9; padding: 30px; overflow-y: auto;
+        /* PREVIEW AREA */
+        .preview-area {
+            flex: 1; background: #e2e8f0; padding: 40px; overflow-y: auto;
             display: flex; justify-content: center;
         }
 
+        /* THE EXAM PAPER */
         .paper {
             background: white; width: 100%; max-width: 210mm; min-height: 297mm;
-            padding: 20mm; box-shadow: var(--paper-shadow);
-            font-family: 'Merriweather', serif;
+            padding: 20mm; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'Times New Roman', Times, serif; color: #000;
         }
 
-        .p-school { font-size: 16px; font-weight: 900; text-align: center; text-transform: uppercase; }
-        .p-subtext { font-size: 10px; font-style: italic; text-align: center; }
-        .p-location { font-size: 13px; font-weight: 700; text-align: center; margin-bottom: 20px; }
-        .p-exam-title { text-align: center; font-weight: 800; margin-bottom: 20px; text-decoration: underline; }
+        /* Paper Header - Centered */
+        .ph-center { text-align: center; line-height: 1.3; }
+        .ph-school { font-size: 16pt; font-weight: bold; }
+        .ph-sub { font-size: 10pt; }
+        .ph-loc { font-size: 12pt; font-weight: bold; margin-bottom: 15px; }
+        
+        .ph-exam { font-size: 14pt; font-weight: bold; margin: 20px 0; text-decoration: underline; }
 
-        .meta-table { width: 100%; border-top: 2px solid black; border-bottom: 2px solid black; margin-bottom: 20px; }
-        .meta-table td { padding: 8px 0; font-weight: bold; font-size: 12px; }
-        .text-right { text-align: right; }
+        /* Meta Table */
+        .ph-table { width: 100%; border-top: 2px solid black; border-bottom: 2px solid black; margin-bottom: 25px; border-collapse: collapse; }
+        .ph-table td { padding: 8px 0; font-size: 12pt; font-weight: bold; vertical-align: bottom; }
+        .ph-right { text-align: right; }
 
-        #p-content { font-size: 12px; line-height: 1.6; white-space: pre-wrap; }
-        .section-header { display: block; text-align: center; font-weight: 800; margin: 20px 0 10px 0; }
+        /* CONTENT STYLING - LEFT ALIGNED */
+        #p-content {
+            font-size: 12pt;
+            line-height: 1.5;
+            text-align: left; /* Crucial: Questions are left aligned */
+        }
 
-        @media (min-width: 900px) {
-            body { flex-direction: row; }
-            .sidebar { width: 400px; height: 100vh; border-right: 1px solid var(--border); border-bottom: none; }
+        /* Specific styles for detected content */
+        .paper-section { 
+            text-align: center; 
+            font-weight: bold; 
+            margin-top: 25px; 
+            margin-bottom: 10px; 
+            font-size: 13pt;
+            text-transform: uppercase;
+        }
+        
+        .paper-instructions {
+            font-style: italic;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .paper-question {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; height: auto; }
+            .preview-area { padding: 10px; }
+            .paper { padding: 15mm; height: auto; }
         }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="brand-text">🤖 AI PaperGen</div>
+        <div class="logo">📄 PaperGen Pro</div>
 
+        <div><label>Subject</label><select id="subject" onchange="updateBooks()"></select></div>
+        <div><label>Book</label><select id="book" onchange="updateChapters()"></select></div>
+        
         <div>
-            <label>Subject</label>
-            <select id="subject" onchange="updateBooks()"></select>
-        </div>
-
-        <div>
-            <label>Book / Part</label>
-            <select id="book" onchange="updateChapters()"></select>
-        </div>
-
-        <div>
-            <label>Select Chapters / Units (Multiple)</label>
-            <div id="chapter-container" class="checkbox-container">
-                </div>
+            <label>Select Chapters</label>
+            <div id="chapter-container" class="checkbox-container"></div>
         </div>
 
         <div class="row">
-            <div class="col">
-                <label>Difficulty</label>
-                <select id="difficulty">
-                    <option>Easy</option>
-                    <option selected>Medium</option>
-                    <option>Hard</option>
-                </select>
-            </div>
-            <div class="col">
-                <label>Test Name</label>
-                <input type="text" id="testName" value="Unit Test I">
-            </div>
+            <div class="col"><label>Difficulty</label><select id="difficulty"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></div>
+            <div class="col"><label>Test Name</label><input type="text" id="testName" value="Revision Test - I"></div>
         </div>
-
         <div class="row">
             <div class="col"><label>Time</label><input type="text" id="time" value="45 mins"></div>
-            <div class="col"><label>Marks</label><input type="text" id="marks" value="25"></div>
+            <div class="col"><label>Max Marks</label><input type="text" id="marks" value="25"></div>
         </div>
 
-        <div>
-            <label>Custom Prompt</label>
-            <textarea id="prompt" placeholder="Ex: Add 1 case study..."></textarea>
-        </div>
+        <div><label>Instructions / Prompt</label><textarea id="prompt" placeholder="Ex: 5 MCQs, 3 Short Answer..."></textarea></div>
 
-        <button class="btn-main" onclick="generate()">✨ Generate Paper</button>
-        <div id="loading" style="display:none; text-align:center; margin-top:10px; color:var(--primary);">Generating...</div>
+        <button onclick="generate()">Generate Paper</button>
+        <div id="loading" style="display:none; text-align:center; padding:10px;">Generating...</div>
 
         <form id="dlForm" action="/download" method="POST" target="_blank">
             <input type="hidden" name="subject" id="d-sub">
@@ -169,30 +153,32 @@
             <input type="hidden" name="time" id="d-time">
             <input type="hidden" name="marks" id="d-marks">
             <input type="hidden" name="content" id="d-cont">
-            <button type="submit" class="btn-download" id="dlBtn">⬇ Download .docx</button>
+            <button type="submit" class="btn-dl" id="dlBtn">Download Word Doc</button>
         </form>
     </div>
 
-    <div class="preview-container">
+    <div class="preview-area">
         <div class="paper">
-            <div class="p-school">Bharatiya Vidya Bhavan’s Residential Public School</div>
-            <div class="p-subtext">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
-            <div class="p-location">VIDHYASHRAM – BHIMAVARAM-534201</div>
+            <div class="ph-center ph-school">BHARATIYA VIDYA BHAVAN’S RESIDENTIAL PUBLIC SCHOOL</div>
+            <div class="ph-center ph-sub">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
+            <div class="ph-center ph-loc">VIDHYASHRAM – BHIMAVARAM-534201</div>
             
-            <div class="p-exam-title"><span id="p-testName">Unit Test I</span> – 2025-26</div>
+            <div class="ph-center ph-exam"><span id="p-testName">Revision Test - I</span> – 2025-26</div>
 
-            <table class="meta-table">
+            <table class="ph-table">
                 <tr>
-                    <td>Sub: <span id="p-sub">Subject</span></td>
-                    <td class="text-right">Time: <span id="p-time">45 mins</span></td>
+                    <td>Sub: <span id="p-sub">Economics</span></td>
+                    <td class="ph-right">Time: <span id="p-time">45 mins</span></td>
                 </tr>
                 <tr>
                     <td>Class: XII</td>
-                    <td class="text-right">Marks: <span id="p-marks">25</span></td>
+                    <td class="ph-right">Max Marks: <span id="p-marks">25</span></td>
                 </tr>
             </table>
 
-            <div id="p-content" style="color:#999; text-align:center; margin-top:50px;">Select chapters and click Generate.</div>
+            <div id="p-content">
+                <i style="color:#888;">Select chapters and click Generate to see the paper here...</i>
+            </div>
         </div>
     </div>
 
@@ -203,12 +189,12 @@
                 "Indian Economic Development": ["Development (1947-90)", "Economic Reforms 1991", "Poverty & Human Capital", "Rural Development", "Infrastructure", "Environment"]
             },
             "Business Studies": {
-                "Part I: Principles": ["Nature of Management", "Principles of Mgmt", "Business Environment", "Planning", "Organising", "Staffing", "Directing", "Controlling"],
-                "Part II: Finance": ["Financial Management", "Financial Markets", "Marketing Management", "Consumer Protection"]
+                "Part I": ["Nature of Management", "Principles of Mgmt", "Business Environment", "Planning", "Organising", "Staffing", "Directing", "Controlling"],
+                "Part II": ["Financial Management", "Financial Markets", "Marketing Management", "Consumer Protection"]
             },
             "Accountancy": {
-                "Part I: Partnership": ["Partnership Basics", "Admission of Partner", "Retirement/Death", "Dissolution"],
-                "Part II: Company": ["Share Capital", "Debentures", "Financial Statements", "Ratio Analysis", "Cash Flow"]
+                "Part I": ["Partnership Basics", "Admission", "Retirement/Death", "Dissolution"],
+                "Part II": ["Share Capital", "Debentures", "Financial Statements", "Ratios", "Cash Flow"]
             }
         };
 
@@ -216,118 +202,85 @@
         const bookSel = document.getElementById("book");
         const chapContainer = document.getElementById("chapter-container");
 
-        // Initialize Subjects
-        Object.keys(syllabus).forEach(s => {
-            let opt = document.createElement("option");
-            opt.value = s; opt.innerText = s;
-            subSel.appendChild(opt);
-        });
+        Object.keys(syllabus).forEach(s => subSel.add(new Option(s, s)));
 
         function updateBooks() {
             bookSel.innerHTML = "";
-            let books = syllabus[subSel.value];
-            Object.keys(books).forEach(b => {
-                let opt = document.createElement("option");
-                opt.value = b; opt.innerText = b;
-                bookSel.appendChild(opt);
-            });
+            Object.keys(syllabus[subSel.value]).forEach(b => bookSel.add(new Option(b, b)));
             updateChapters();
         }
 
         function updateChapters() {
             chapContainer.innerHTML = "";
-            let chapters = syllabus[subSel.value][bookSel.value];
-            
-            chapters.forEach((c, index) => {
-                // Create checkbox wrapper
-                let div = document.createElement("div");
-                div.className = "checkbox-item";
-                
-                let checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.id = "ch_" + index;
-                checkbox.value = c;
-                checkbox.name = "chapters";
-                
-                let label = document.createElement("label");
-                label.htmlFor = "ch_" + index;
-                label.innerText = c;
-                
-                div.appendChild(checkbox);
-                div.appendChild(label);
+            syllabus[subSel.value][bookSel.value].forEach((c, i) => {
+                let div = document.createElement("div"); div.className = "checkbox-item";
+                div.innerHTML = `<input type="checkbox" id="c${i}" value="${c}" name="chapters"><label for="c${i}">${c}</label>`;
                 chapContainer.appendChild(div);
             });
         }
-
-        updateBooks(); // Run on load
+        updateBooks();
 
         async function generate() {
-            // Gather selected chapters
-            const checkedBoxes = document.querySelectorAll('input[name="chapters"]:checked');
-            let selectedChapters = Array.from(checkedBoxes).map(cb => cb.value).join(", ");
-            
-            if (!selectedChapters) {
-                alert("Please select at least one chapter!");
-                return;
-            }
+            const chaps = Array.from(document.querySelectorAll('input[name="chapters"]:checked')).map(c => c.value).join(", ");
+            if(!chaps) return alert("Select at least one chapter");
 
-            const btn = document.querySelector('.btn-main');
+            const btn = document.querySelector('button');
             const loading = document.getElementById('loading');
             const pContent = document.getElementById('p-content');
             
-            // UI Updates
+            // Sync Header
             document.getElementById('p-sub').innerText = subSel.value;
             document.getElementById('p-testName').innerText = document.getElementById('testName').value;
             document.getElementById('p-time').innerText = document.getElementById('time').value;
             document.getElementById('p-marks').innerText = document.getElementById('marks').value;
 
-            btn.disabled = true;
-            loading.style.display = 'block';
-            pContent.style.opacity = '0.5';
-
-            const payload = {
-                subject: subSel.value,
-                book: bookSel.value,
-                chapters: selectedChapters, // Sending string of chapters
-                difficulty: document.getElementById('difficulty').value,
-                grade: "XII",
-                testName: document.getElementById('testName').value,
-                time: document.getElementById('time').value,
-                marks: document.getElementById('marks').value,
-                prompt: document.getElementById('prompt').value
-            };
+            btn.disabled = true; loading.style.display = 'block'; pContent.style.opacity = '0.5';
 
             try {
                 const res = await fetch('/generate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        subject: subSel.value, book: bookSel.value, chapters: chaps,
+                        difficulty: document.getElementById('difficulty').value,
+                        grade: "XII", testName: document.getElementById('testName').value,
+                        time: document.getElementById('time').value, marks: document.getElementById('marks').value,
+                        prompt: document.getElementById('prompt').value
+                    })
                 });
                 const data = await res.json();
-
+                
                 if(data.success) {
-                    let htmlText = data.content
-                        .replace(/</g, "&lt;").replace(/>/g, "&gt;")
-                        .replace(/(SECTION [A-Z]|PART [A-Z])/g, '<span class="section-header">$1</span>');
+                    // Smart Formatting
+                    let formattedHTML = "";
+                    const lines = data.content.split('\n');
                     
-                    pContent.innerHTML = htmlText;
+                    lines.forEach(line => {
+                        line = line.trim();
+                        if(!line) return;
+
+                        if(line.toUpperCase().includes("SECTION") || line.toUpperCase().includes("PART ")) {
+                            formattedHTML += `<div class="paper-section">${line}</div>`;
+                        } else if(line.toUpperCase().includes("GENERAL INSTRUCTIONS")) {
+                            formattedHTML += `<div class="paper-section" style="font-size:12pt; text-decoration:underline;">${line}</div>`;
+                        } else {
+                            // Standard question
+                            formattedHTML += `<div class="paper-question">${line}</div>`;
+                        }
+                    });
+
+                    pContent.innerHTML = formattedHTML;
                     
-                    document.getElementById('d-sub').value = payload.subject;
-                    document.getElementById('d-test').value = payload.testName;
-                    document.getElementById('d-time').value = payload.time;
-                    document.getElementById('d-marks').value = payload.marks;
+                    document.getElementById('d-sub').value = subSel.value;
+                    document.getElementById('d-test').value = document.getElementById('testName').value;
+                    document.getElementById('d-time').value = document.getElementById('time').value;
+                    document.getElementById('d-marks').value = document.getElementById('marks').value;
                     document.getElementById('d-cont').value = data.content;
                     document.getElementById('dlBtn').style.display = 'block';
-                } else {
-                    alert(data.error);
                 }
-            } catch(e) {
-                alert("Connection failed");
-            } finally {
-                btn.disabled = false;
-                loading.style.display = 'none';
-                pContent.style.opacity = '1';
-            }
+            } catch(e) { alert("Error connecting"); }
+            
+            btn.disabled = false; loading.style.display = 'none'; pContent.style.opacity = '1';
         }
     </script>
 </body>
