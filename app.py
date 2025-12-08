@@ -18,35 +18,31 @@ genai.configure(api_key=GENAI_API_KEY)
 
 def clean_text(text):
     """Removes Markdown symbols like ** and ## from the text."""
-    # Remove bold/italic markers
     text = text.replace('**', '').replace('__', '').replace('##', '')
-    # Remove horizontal rules
     text = re.sub(r'^-{3,}', '', text, flags=re.MULTILINE)
     return text.strip()
 
-def generate_paper_content(subject, book, chapter, difficulty, grade, time, marks, prompt_text):
+def generate_paper_content(subject, book, chapters, difficulty, grade, time, marks, prompt_text):
     model = genai.GenerativeModel('gemini-pro')
     
-    # Context prompt
+    # Updated Prompt for Multiple Chapters
     full_prompt = f"""
     Create a formal exam question paper for CBSE Class {grade}.
     
     Subject: {subject}
     Book/Part: {book}
-    Chapter/Topic: {chapter}
+    Target Chapters/Units: {chapters}
     Difficulty Level: {difficulty}
     Time: {time}
     Max Marks: {marks}
     
     Specific Instructions: {prompt_text}
     
-    FORMATTING RULES (STRICT):
-    1. Do NOT use markdown symbols like asterisks (**), hashes (##), or dashes (---).
-    2. Write content in plain text.
+    IMPORTANT INSTRUCTIONS:
+    1. Ensure questions are distributed among the selected chapters: {chapters}.
+    2. Do NOT use markdown symbols like asterisks (**), hashes (##), or dashes (---).
     3. Structure the paper clearly with "SECTION A", "SECTION B" as headings.
-    4. Ensure questions are numbered (1, 2, 3...).
-    
-    Start directly with "SECTION A".
+    4. Start directly with "SECTION A".
     """
     
     response = model.generate_content(full_prompt)
@@ -55,12 +51,10 @@ def generate_paper_content(subject, book, chapter, difficulty, grade, time, mark
 def create_word_doc(header_info, content):
     doc = Document()
     
-    # --- HEADER STYLE ---
     style = doc.styles['Normal']
     style.font.name = 'Times New Roman'
     style.font.size = Pt(11)
 
-    # Helper for centered bold text
     def add_centered_line(text, size=11, is_bold=False):
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -68,46 +62,37 @@ def create_word_doc(header_info, content):
         run.bold = is_bold
         run.font.size = Pt(size)
 
-    # Header Lines
     add_centered_line("BHARATIYA VIDYA BHAVAN’S RESIDENTIAL PUBLIC SCHOOL", 14, True)
     add_centered_line("(Sponsored by rice millers’ education and cultural society, W.G.Dt)", 10, False)
     add_centered_line("VIDHYASHRAM – BHIMAVARAM-534201", 12, True)
     
-    # Test Name Line
     add_centered_line(f"{header_info['test_name']} – {header_info['academic_year']}", 12, True)
 
-    doc.add_paragraph() # Spacer
+    doc.add_paragraph()
 
-    # Info Table (Subject, Time, Class, Marks)
     table = doc.add_table(rows=2, cols=2)
     table.autofit = True
     
-    # Row 1
-    table.cell(0, 0).text = f"Sub: {header_info['subject']} ({header_info['book']})"
+    table.cell(0, 0).text = f"Sub: {header_info['subject']}"
     cell_r1 = table.cell(0, 1)
     cell_r1.text = f"Time: {header_info['time']}"
     cell_r1.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT
 
-    # Row 2
     table.cell(1, 0).text = f"Class: {header_info['grade']}"
     cell_r2 = table.cell(1, 1)
     cell_r2.text = f"Marks: {header_info['marks']}"
     cell_r2.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT
     
-    # Bold the table text
     for row in table.rows:
         for cell in row.cells:
             for p in cell.paragraphs:
                 for run in p.runs:
                     run.bold = True
 
-    # Divider Line
     p_line = doc.add_paragraph("_" * 80)
     p_line.alignment = WD_ALIGN_PARAGRAPH.CENTER
     doc.add_paragraph() 
 
-    # --- CONTENT PARSING ---
-    # We parse line by line. If a line looks like a Header (Section A), we bold it.
     lines = content.split('\n')
     for line in lines:
         line = line.strip()
@@ -117,18 +102,11 @@ def create_word_doc(header_info, content):
         p = doc.add_paragraph()
         run = p.add_run(line)
         
-        # LOGIC: Bold lines that are Headers
-        # e.g., "SECTION A", "PART B", or very short uppercase lines
         if (line.upper().startswith("SECTION") or line.upper().startswith("PART")) and len(line) < 40:
             run.bold = True
             run.font.size = Pt(12)
             p.paragraph_format.space_before = Pt(12)
             p.paragraph_format.space_after = Pt(6)
-        
-        # LOGIC: Bold "Question" labels if explicitly written like "Q1." (optional)
-        elif line.startswith("Q") and line[1:3].isdigit(): 
-             # Just bold the Q part? Simpler to leave as normal text for questions
-             pass
 
     file_stream = io.BytesIO()
     doc.save(file_stream)
@@ -146,7 +124,7 @@ def generate():
         text = generate_paper_content(
             data.get('subject'),
             data.get('book'),
-            data.get('chapter'),
+            data.get('chapters'),  # This will now be a string of multiple chapters
             data.get('difficulty'),
             data.get('grade'),
             data.get('time'),
@@ -162,7 +140,6 @@ def download():
     data = request.form
     header_info = {
         'subject': data.get('subject'),
-        'book': data.get('book'), # Added book to header
         'grade': data.get('grade'),
         'test_name': data.get('testName'),
         'academic_year': data.get('year'),
