@@ -259,13 +259,23 @@
 
         <div>
             <label>Class/Section</label>
-            <select id="grade">
+            <select id="grade" onchange="updateSubjects()">
                 <option value="XI MEC">XI MEC</option>
                 <option value="XII MEC">XII MEC</option>
             </select>
         </div>
-        <div><label>Subject</label><select id="subject" onchange="updateBooks()"></select></div>
-        <div><label>Book</label><select id="book" onchange="updateChapters()"></select></div>
+        <div>
+            <label>Subject</label>
+            <select id="subject" onchange="updateBooks()">
+                <option value="">-- Select Subject --</option>
+            </select>
+        </div>
+        <div>
+            <label>Book</label>
+            <select id="book" onchange="updateChapters()">
+                <option value="">-- Select Book --</option>
+            </select>
+        </div>
         <div>
             <label>Select Chapters</label>
             <div id="chapter-container" class="checkbox-container"></div>
@@ -313,7 +323,7 @@
 
         <table class="ph-table">
             <tr>
-                <td>Sub: <span id="p-sub">Economics</span></td>
+                <td>Sub: <span id="p-sub">________</span></td>
                 <td class="ph-right">Time: <span id="p-time">45 mins</span></td>
             </tr>
             <tr>
@@ -330,43 +340,95 @@
 
     <script>
         const syllabus = {
-            "Economics": {
-                "Introductory Macroeconomics": ["National Income", "Money and Banking", "Income & Employment", "Govt Budget", "Balance of Payments"],
-                "Indian Economic Development": ["Development (1947-90)", "Economic Reforms 1991", "Poverty & Human Capital", "Rural Development", "Infrastructure", "Environment"]
+            "XI MEC": {
+                "Economics": {
+                    "Statistics for Economics": ["Introduction", "Collection, Organisation and Presentation of Data", "Statistical Tools and Interpretation"],
+                    "Introductory Microeconomics": ["Introduction", "Consumer's Equilibrium and Demand", "Producer Behaviour and Supply", "Forms of Market and Price Determination"]
+                },
+                "Business Studies": {
+                    "Foundations of Business": ["Nature and Purpose of Business", "Forms of Business Organisation", "Public, Private and Global Enterprises", "Business Services", "Emerging Modes of Business", "Social Responsibility of Business and Business Ethics"],
+                    "Finance and Trade": ["Formation of a Company", "Sources of Business Finance", "Small Business", "Internal Trade", "International Business"]
+                },
+                "Accountancy": {
+                    "Financial Accounting - I": ["Theoretical Framework", "Accounting Process", "Bank Reconciliation Statement", "Depreciation, Provisions and Reserves", "Accounting for Bills of Exchange"],
+                    "Financial Accounting - II": ["Financial Statements of Sole Proprietorship", "Accounts from Incomplete Records", "Computers in Accounting"]
+                },
+                "Mathematics": {
+                    "Part I": ["Sets", "Relations and Functions", "Trigonometric Functions", "Complex Numbers and Quadratic Equations", "Linear Inequalities", "Permutations and Combinations", "Binomial Theorem", "Sequences and Series"],
+                    "Part II": ["Straight Lines", "Conic Sections", "Introduction to Three Dimensional Geometry", "Limits and Derivatives", "Statistics", "Probability"]
+                }
             },
-            "Business Studies": {
-                "Part I": ["Nature of Management", "Principles of Mgmt", "Business Environment", "Planning", "Organising", "Staffing", "Directing", "Controlling"],
-                "Part II": ["Financial Management", "Financial Markets", "Marketing Management", "Consumer Protection"]
-            },
-            "Accountancy": {
-                "Part I": ["Partnership Basics", "Admission", "Retirement/Death", "Dissolution"],
-                "Part II": ["Share Capital", "Debentures", "Financial Statements", "Ratios", "Cash Flow"]
+            "XII MEC": {
+                "Economics": {
+                    "Introductory Macroeconomics": ["National Income and Related Aggregates", "Money and Banking", "Determination of Income and Employment", "Government Budget and the Economy", "Balance of Payments"],
+                    "Indian Economic Development": ["Development Experience (1947-90) and Economic Reforms since 1991", "Current Challenges facing Indian Economy", "Development Experience of India – A Comparison with Neighbours"]
+                },
+                "Business Studies": {
+                    "Principles and Functions of Management": ["Nature and Significance of Management", "Principles of Management", "Business Environment", "Planning", "Organising", "Staffing", "Directing", "Controlling"],
+                    "Business Finance and Marketing": ["Financial Management", "Financial Markets", "Marketing Management", "Consumer Protection"]
+                },
+                "Accountancy": {
+                    "Accounting for Partnership Firms and Companies": ["Accounting for Partnership Firms - Fundamentals", "Goodwill: Nature and Valuation", "Reconstitution of a Partnership Firm - Change in Profit Sharing Ratio", "Admission of a Partner", "Retirement/Death of a Partner", "Dissolution of Partnership Firm", "Accounting for Share Capital", "Accounting for Debentures"],
+                    "Financial Statement Analysis": ["Financial Statements of a Company", "Financial Statement Analysis", "Accounting Ratios", "Cash Flow Statement"]
+                },
+                "Mathematics": {
+                    "Part I": ["Relations and Functions", "Inverse Trigonometric Functions", "Matrices", "Determinants", "Continuity and Differentiability", "Application of Derivatives"],
+                    "Part II": ["Integrals", "Application of Integrals", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"]
+                }
             }
         };
 
+        const gradeSel = document.getElementById("grade");
         const subSel = document.getElementById("subject");
         const bookSel = document.getElementById("book");
         const chapContainer = document.getElementById("chapter-container");
 
-        Object.keys(syllabus).forEach(s => subSel.add(new Option(s, s)));
+        function updateSubjects() {
+            subSel.innerHTML = '<option value="">-- Select Subject --</option>';
+            bookSel.innerHTML = '<option value="">-- Select Book --</option>';
+            chapContainer.innerHTML = "";
+            const selectedGrade = gradeSel.value;
+            if (syllabus[selectedGrade]) {
+                Object.keys(syllabus[selectedGrade]).forEach(s => subSel.add(new Option(s, s)));
+            }
+            updateBooks();
+        }
 
         function updateBooks() {
-            bookSel.innerHTML = "";
-            Object.keys(syllabus[subSel.value]).forEach(b => bookSel.add(new Option(b, b)));
+            bookSel.innerHTML = '<option value="">-- Select Book --</option>';
+            chapContainer.innerHTML = "";
+            const selectedGrade = gradeSel.value;
+            const selectedSub = subSel.value;
+            
+            if (selectedSub && syllabus[selectedGrade] && syllabus[selectedGrade][selectedSub]) {
+                Object.keys(syllabus[selectedGrade][selectedSub]).forEach(b => bookSel.add(new Option(b, b)));
+            }
             updateChapters();
         }
 
         function updateChapters() {
             chapContainer.innerHTML = "";
-            syllabus[subSel.value][bookSel.value].forEach((c, i) => {
-                let div = document.createElement("div"); div.className = "checkbox-item";
-                div.innerHTML = `<input type="checkbox" id="c${i}" value="${c}" name="chapters"><label for="c${i}">${c}</label>`;
-                chapContainer.appendChild(div);
-            });
+            const selectedGrade = gradeSel.value;
+            const selectedSub = subSel.value;
+            const selectedBook = bookSel.value;
+
+            if (selectedGrade && selectedSub && selectedBook && 
+                syllabus[selectedGrade][selectedSub][selectedBook]) {
+                
+                syllabus[selectedGrade][selectedSub][selectedBook].forEach((c, i) => {
+                    let div = document.createElement("div"); div.className = "checkbox-item";
+                    div.innerHTML = `<input type="checkbox" id="c${i}" value="${c}" name="chapters"><label for="c${i}">${c}</label>`;
+                    chapContainer.appendChild(div);
+                });
+            }
         }
-        updateBooks();
+        
+        // Initialize subjects on load
+        updateSubjects();
 
         async function generate() {
+            if (!subSel.value) return alert("Please select a subject");
+            if (!bookSel.value) return alert("Please select a book");
             const chaps = Array.from(document.querySelectorAll('input[name="chapters"]:checked')).map(c => c.value).join(", ");
             if (!chaps) return alert("Select at least one chapter");
 
