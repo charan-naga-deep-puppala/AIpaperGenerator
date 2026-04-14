@@ -3,171 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI PaperGen</title>
+    <title>AI PaperGen | Professional</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-light: #f3f4f6;
-            --white: #ffffff;
-            --text: #1f2937;
-            --border: #e5e7eb;
+            --bg-ui: #f1f5f9;
+            --paper-bg: #ffffff;
+            --text: #1e293b;
         }
-
-        * { box-sizing: border-box; }
 
         body { 
-            margin: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg-light); 
-            display: flex; 
-            flex-direction: column; /* Mobile first: Column */
-            height: 100vh; 
-            overflow: hidden; /* Prevent body scroll on desktop */
+            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-ui); 
+            display: flex; height: 100vh; overflow: hidden;
         }
 
-        /* --- Sidebar (Inputs) --- */
+        /* SIDEBAR */
         .sidebar {
-            background: var(--white);
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            overflow-y: auto;
-            flex-shrink: 0;
-            z-index: 10;
+            width: 400px; background: white; padding: 25px; border-right: 1px solid #cbd5e1;
+            display: flex; flex-direction: column; gap: 15px; overflow-y: auto; z-index: 10;
         }
 
-        .logo { 
-            font-size: 1.25rem; 
-            font-weight: 800; 
-            color: var(--primary); 
-            margin-bottom: 20px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group { margin-bottom: 15px; }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
         
-        label { 
-            display: block; 
-            font-size: 0.85rem; 
-            font-weight: 600;
-            color: #4b5563; 
-            margin-bottom: 6px; 
-        }
+        label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: block; }
         
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 16px; /* Prevents zoom on iPhone */
-            background: #fff;
-            transition: border-color 0.2s;
+        input, select, textarea {
+            width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-size: 0.9rem; font-family: 'Inter', sans-serif;
         }
 
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        /* Checkbox Area */
+        .checkbox-container {
+            border: 1px solid #cbd5e1; border-radius: 6px; height: 120px; 
+            overflow-y: auto; padding: 10px; background: #fff;
         }
+        .checkbox-item { display: flex; align-items: center; margin-bottom: 5px; }
+        .checkbox-item input { width: auto; margin-right: 8px; }
+        .checkbox-item label { text-transform: none; color: var(--text); font-weight: 400; margin: 0; }
 
-        textarea { height: 100px; resize: vertical; }
-
-        .ai-prompt-box {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #1e40af;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; }
 
         button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
+            background: var(--primary); color: white; border: none; padding: 14px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px;
+        }
+        button:hover { background: #1d4ed8; }
+        .btn-dl { background: #fff; color: var(--text); border: 1px solid #cbd5e1; display: none; }
+        .btn-dl:hover { background: #f8fafc; }
+
+        /* PREVIEW AREA */
+        .preview-area {
+            flex: 1; background: #e2e8f0; padding: 40px; overflow-y: auto;
+            display: flex; justify-content: center;
         }
 
-        .btn-gen { background: var(--primary); color: white; }
-        .btn-gen:hover { background: var(--primary-hover); }
-        .btn-gen:disabled { background: #93c5fd; cursor: not-allowed; }
+        /* THE EXAM PAPER */
+        .paper {
+            background: white; width: 100%; max-width: 210mm; min-height: 297mm;
+            padding: 20mm; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'Times New Roman', Times, serif; color: #000;
+        }
+
+        /* Paper Header - Centered */
+        .ph-center { text-align: center; line-height: 1.3; }
+        .ph-school { font-size: 16pt; font-weight: bold; }
+        .ph-sub { font-size: 10pt; }
+        .ph-loc { font-size: 12pt; font-weight: bold; margin-bottom: 15px; }
         
-        .btn-down { 
-            background: #e5e7eb; 
-            color: #374151; 
-            margin-top: 10px; 
-            display: none; 
-            border: 1px solid #d1d5db;
-        }
-        .btn-down:hover { background: #d1d5db; }
+        .ph-exam { font-size: 14pt; font-weight: bold; margin: 20px 0; text-decoration: underline; }
 
-        /* --- Preview Area --- */
-        .preview-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #e2e8f0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+        /* Meta Table */
+        .ph-table { width: 100%; border-top: 2px solid black; border-bottom: 2px solid black; margin-bottom: 25px; border-collapse: collapse; }
+        .ph-table td { padding: 8px 0; font-size: 12pt; font-weight: bold; vertical-align: bottom; }
+        .ph-right { text-align: right; }
+
+        /* CONTENT STYLING - LEFT ALIGNED */
+        #p-content {
+            font-size: 12pt;
+            line-height: 1.5;
+            text-align: left; /* Crucial: Questions are left aligned */
         }
 
-        .paper-sheet {
-            background: white;
-            width: 100%;
-            max-width: 210mm; /* A4 Width */
-            min-height: 297mm; /* A4 Height */
-            padding: 25mm 20mm; /* A4 Margins */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            font-family: 'Times New Roman', Times, serif;
-            position: relative;
-        }
-
-        /* Paper Styles */
-        .header-text { text-align: center; line-height: 1.4; color: black; }
-        .school-name { font-size: 14pt; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
-        .sub-header { font-size: 10pt; font-style: italic; margin-bottom: 4px;}
-        .location { font-weight: bold; font-size: 12pt; margin-bottom: 15px; }
-        .exam-title { font-weight: bold; font-size: 12pt; margin: 15px 0; border-bottom: 1px solid transparent; }
-        
-        .meta-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-            border-bottom: 2px solid black; 
-            padding-bottom: 10px; 
-            margin-bottom: 20px; 
-        }
-        .meta-table td { 
+        /* Specific styles for detected content */
+        .paper-section { 
+            text-align: center; 
             font-weight: bold; 
-            padding: 5px 0; 
-            font-size: 11pt;
-            vertical-align: bottom;
+            margin-top: 25px; 
+            margin-bottom: 10px; 
+            font-size: 13pt;
+            text-transform: uppercase;
         }
-        .text-right { text-align: right; }
+        
+        .paper-instructions {
+            font-style: italic;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
 
-        #paper-content { 
-            white-space: pre-wrap; 
-            line-height: 1.5; 
-            font-size: 12pt; 
+        .paper-question {
+            margin-bottom: 12px;
             text-align: justify;
         }
 
+<<<<<<< HEAD
         #loading { 
             text-align: center; 
             display: none; 
@@ -226,14 +169,25 @@
             
             .meta-table td { font-size: 12px; }
             #paper-content { font-size: 13px; }
+=======
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; height: auto; }
+            .preview-area { padding: 10px; }
+            .paper { padding: 15mm; height: auto; }
+>>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
         }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo">📄 AI PaperGen</div>
+        <div class="logo">📄 PaperGen Pro</div>
+
+        <div><label>Subject</label><select id="subject" onchange="updateBooks()"></select></div>
+        <div><label>Book</label><select id="book" onchange="updateChapters()"></select></div>
         
+<<<<<<< HEAD
         <div class="form-grid">
             <div class="form-group">
                 <label>Subject</label>
@@ -280,146 +234,172 @@
                     </optgroup>
                 </select>
             </div>
+=======
+        <div>
+            <label>Select Chapters</label>
+            <div id="chapter-container" class="checkbox-container"></div>
+>>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
         </div>
 
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Test Name</label>
-                <input type="text" id="testName" value="Revision Test - XI">
-            </div>
-            <div class="form-group">
-                <label>Acad. Year</label>
-                <input type="text" id="year" value="2025-26">
-            </div>
+        <div class="row">
+            <div class="col"><label>Difficulty</label><select id="difficulty"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></div>
+            <div class="col"><label>Test Name</label><input type="text" id="testName" value="Revision Test - I"></div>
+        </div>
+        <div class="row">
+            <div class="col"><label>Time</label><input type="text" id="time" value="45 mins"></div>
+            <div class="col"><label>Max Marks</label><input type="text" id="marks" value="25"></div>
         </div>
 
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Time</label>
-                <input type="text" id="time" value="40min">
-            </div>
-            <div class="form-group">
-                <label>Max Marks</label>
-                <input type="text" id="marks" value="20">
-            </div>
-        </div>
+        <div><label>Instructions / Prompt</label><textarea id="prompt" placeholder="Ex: 5 MCQs, 3 Short Answer..."></textarea></div>
 
-        <div class="form-group">
-             <label>AI Prompt</label>
-            <div class="ai-prompt-box">
-                <strong>Tip:</strong> Be specific. e.g. "Create 5 MCQs and 2 long answer questions on Chapter 3."
-            </div>
-            <textarea id="prompt" placeholder="Describe the test you want..."></textarea>
-        </div>
+        <button onclick="generate()">Generate Paper</button>
+        <div id="loading" style="display:none; text-align:center; padding:10px;">Generating...</div>
 
-        <button class="btn-gen" onclick="generatePaper()">✨ Generate Paper</button>
-        <div id="loading">Generating Questions... <span style="font-size:1.2em;">⏳</span></div>
-
-        <form id="downloadForm" action="/download" method="POST" target="_blank">
-            <input type="hidden" name="subject" id="d-subject">
-            <input type="hidden" name="grade" id="d-grade">
-            <input type="hidden" name="testName" id="d-testName">
-            <input type="hidden" name="year" id="d-year">
+        <form id="dlForm" action="/download" method="POST" target="_blank">
+            <input type="hidden" name="subject" id="d-sub">
+            <input type="hidden" name="grade" value="XII">
+            <input type="hidden" name="testName" id="d-test">
+            <input type="hidden" name="year" value="2025-26">
             <input type="hidden" name="time" id="d-time">
             <input type="hidden" name="marks" id="d-marks">
-            <input type="hidden" name="content" id="d-content">
-            <button type="submit" class="btn-down" id="downloadBtn">⬇ Download Word Doc</button>
+            <input type="hidden" name="content" id="d-cont">
+            <button type="submit" class="btn-dl" id="dlBtn">Download Word Doc</button>
         </form>
     </div>
 
-    <div class="preview-container">
-        <div class="paper-sheet">
-            <div class="header-text school-name">BHARATIYA VIDYA BHAVAN’S RESIDENTIAL PUBLIC SCHOOL</div>
-            <div class="header-text sub-header">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
-            <div class="header-text location">VIDHYASHRAM – BHIMAVARAM-534201</div>
+    <div class="preview-area">
+        <div class="paper">
+            <div class="ph-center ph-school">BHARATIYA VIDYA BHAVAN’S RESIDENTIAL PUBLIC SCHOOL</div>
+            <div class="ph-center ph-sub">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
+            <div class="ph-center ph-loc">VIDHYASHRAM – BHIMAVARAM-534201</div>
             
+<<<<<<< HEAD
             <div class="header-text exam-title"><span id="p-testName">Revision Test - XI</span> – <span id="p-year">2025-26</span></div>
+=======
+            <div class="ph-center ph-exam"><span id="p-testName">Revision Test - I</span> – 2025-26</div>
+>>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
 
-            <table class="meta-table">
+            <table class="ph-table">
                 <tr>
-                    <td>Sub: <span id="p-subject">Business Studies</span></td>
-                    <td class="text-right">Time: <span id="p-time">40min</span></td>
+                    <td>Sub: <span id="p-sub">Economics</span></td>
+                    <td class="ph-right">Time: <span id="p-time">45 mins</span></td>
                 </tr>
                 <tr>
+<<<<<<< HEAD
                     <td>Class: <span id="p-grade">XI IEC & PEC</span></td>
                     <td class="text-right">Marks: <span id="p-marks">20</span></td>
+=======
+                    <td>Class: XII</td>
+                    <td class="ph-right">Max Marks: <span id="p-marks">25</span></td>
+>>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
                 </tr>
             </table>
 
-            <div id="paper-content">
-                <p style="color: #6b7280; text-align: center; margin-top: 50px;">
-                    <i>Enter details on the left (or top on mobile) and click "Generate" to see the preview here.</i>
-                </p>
+            <div id="p-content">
+                <i style="color:#888;">Select chapters and click Generate to see the paper here...</i>
             </div>
         </div>
     </div>
 
     <script>
-        async function generatePaper() {
-            // Update Preview Header immediately
-            document.getElementById('p-subject').innerText = document.getElementById('subject').value;
-            document.getElementById('p-grade').innerText = document.getElementById('grade').value;
+        const syllabus = {
+            "Economics": {
+                "Introductory Macroeconomics": ["National Income", "Money and Banking", "Income & Employment", "Govt Budget", "Balance of Payments"],
+                "Indian Economic Development": ["Development (1947-90)", "Economic Reforms 1991", "Poverty & Human Capital", "Rural Development", "Infrastructure", "Environment"]
+            },
+            "Business Studies": {
+                "Part I": ["Nature of Management", "Principles of Mgmt", "Business Environment", "Planning", "Organising", "Staffing", "Directing", "Controlling"],
+                "Part II": ["Financial Management", "Financial Markets", "Marketing Management", "Consumer Protection"]
+            },
+            "Accountancy": {
+                "Part I": ["Partnership Basics", "Admission", "Retirement/Death", "Dissolution"],
+                "Part II": ["Share Capital", "Debentures", "Financial Statements", "Ratios", "Cash Flow"]
+            }
+        };
+
+        const subSel = document.getElementById("subject");
+        const bookSel = document.getElementById("book");
+        const chapContainer = document.getElementById("chapter-container");
+
+        Object.keys(syllabus).forEach(s => subSel.add(new Option(s, s)));
+
+        function updateBooks() {
+            bookSel.innerHTML = "";
+            Object.keys(syllabus[subSel.value]).forEach(b => bookSel.add(new Option(b, b)));
+            updateChapters();
+        }
+
+        function updateChapters() {
+            chapContainer.innerHTML = "";
+            syllabus[subSel.value][bookSel.value].forEach((c, i) => {
+                let div = document.createElement("div"); div.className = "checkbox-item";
+                div.innerHTML = `<input type="checkbox" id="c${i}" value="${c}" name="chapters"><label for="c${i}">${c}</label>`;
+                chapContainer.appendChild(div);
+            });
+        }
+        updateBooks();
+
+        async function generate() {
+            const chaps = Array.from(document.querySelectorAll('input[name="chapters"]:checked')).map(c => c.value).join(", ");
+            if(!chaps) return alert("Select at least one chapter");
+
+            const btn = document.querySelector('button');
+            const loading = document.getElementById('loading');
+            const pContent = document.getElementById('p-content');
+            
+            // Sync Header
+            document.getElementById('p-sub').innerText = subSel.value;
             document.getElementById('p-testName').innerText = document.getElementById('testName').value;
-            document.getElementById('p-year').innerText = document.getElementById('year').value;
             document.getElementById('p-time').innerText = document.getElementById('time').value;
             document.getElementById('p-marks').innerText = document.getElementById('marks').value;
 
-            const btn = document.querySelector('.btn-gen');
-            const loading = document.getElementById('loading');
-            const contentDiv = document.getElementById('paper-content');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            // UI State: Loading
-            btn.disabled = true;
-            loading.style.display = 'block';
-            contentDiv.style.opacity = '0.5';
-
-            const payload = {
-                subject: document.getElementById('subject').value,
-                grade: document.getElementById('grade').value,
-                testName: document.getElementById('testName').value,
-                year: document.getElementById('year').value,
-                time: document.getElementById('time').value,
-                marks: document.getElementById('marks').value,
-                prompt: document.getElementById('prompt').value
-            };
+            btn.disabled = true; loading.style.display = 'block'; pContent.style.opacity = '0.5';
 
             try {
-                const response = await fetch('/generate', {
+                const res = await fetch('/generate', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        subject: subSel.value, book: bookSel.value, chapters: chaps,
+                        difficulty: document.getElementById('difficulty').value,
+                        grade: "XII", testName: document.getElementById('testName').value,
+                        time: document.getElementById('time').value, marks: document.getElementById('marks').value,
+                        prompt: document.getElementById('prompt').value
+                    })
                 });
+                const data = await res.json();
                 
-                const data = await response.json();
+                if(data.success) {
+                    // Smart Formatting
+                    let formattedHTML = "";
+                    const lines = data.content.split('\n');
+                    
+                    lines.forEach(line => {
+                        line = line.trim();
+                        if(!line) return;
 
-                if (data.success) {
-                    contentDiv.innerText = data.content;
-                    downloadBtn.style.display = 'block';
+                        if(line.toUpperCase().includes("SECTION") || line.toUpperCase().includes("PART ")) {
+                            formattedHTML += `<div class="paper-section">${line}</div>`;
+                        } else if(line.toUpperCase().includes("GENERAL INSTRUCTIONS")) {
+                            formattedHTML += `<div class="paper-section" style="font-size:12pt; text-decoration:underline;">${line}</div>`;
+                        } else {
+                            // Standard question
+                            formattedHTML += `<div class="paper-question">${line}</div>`;
+                        }
+                    });
+
+                    pContent.innerHTML = formattedHTML;
                     
-                    // Fill hidden form for download
-                    document.getElementById('d-subject').value = payload.subject;
-                    document.getElementById('d-grade').value = payload.grade;
-                    document.getElementById('d-testName').value = payload.testName;
-                    document.getElementById('d-year').value = payload.year;
-                    document.getElementById('d-time').value = payload.time;
-                    document.getElementById('d-marks').value = payload.marks;
-                    document.getElementById('d-content').value = data.content;
-                    
-                    // On mobile, scroll to preview
-                    if (window.innerWidth < 768) {
-                        document.querySelector('.preview-container').scrollIntoView({ behavior: 'smooth' });
-                    }
-                } else {
-                    alert('Error: ' + data.error);
+                    document.getElementById('d-sub').value = subSel.value;
+                    document.getElementById('d-test').value = document.getElementById('testName').value;
+                    document.getElementById('d-time').value = document.getElementById('time').value;
+                    document.getElementById('d-marks').value = document.getElementById('marks').value;
+                    document.getElementById('d-cont').value = data.content;
+                    document.getElementById('dlBtn').style.display = 'block';
                 }
-            } catch (err) {
-                alert('Failed to connect to server. Check your internet.');
-            } finally {
-                btn.disabled = false;
-                loading.style.display = 'none';
-                contentDiv.style.opacity = '1';
-            }
+            } catch(e) { alert("Error connecting"); }
+            
+            btn.disabled = false; loading.style.display = 'none'; pContent.style.opacity = '1';
         }
     </script>
 </body>
