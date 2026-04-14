@@ -141,30 +141,16 @@ def home():
 @app.route('/generate', methods=['POST'])
 def generate():
     data = request.json
-<<<<<<< HEAD
-    
-    # Extract data from UI
-    subject = data.get('subject', 'Business Studies')
-    grade = data.get('grade', 'XI IEC & PEC')
-    test_name = data.get('testName', 'Revision Test - XI')
-    year = data.get('year', '2025-26')
-    time = data.get('time', '40min')
-    marks = data.get('marks', '20')
-    user_prompt = data.get('prompt', '')
-
-    # 1. Call Gemini
-=======
->>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
     try:
         text = generate_paper_content(
-            data.get('subject'),
-            data.get('book'),
-            data.get('chapters'),
-            data.get('difficulty'),
-            data.get('grade'),
-            data.get('time'),
-            data.get('marks'),
-            data.get('prompt')
+            data.get('subject', 'Business Studies'),
+            data.get('book', 'NCERT'),
+            data.get('chapters', 'Covered syllabus'),
+            data.get('difficulty', 'Medium'),
+            data.get('grade', 'XI IEC & PEC'),
+            data.get('time', '40min'),
+            data.get('marks', '20'),
+            data.get('prompt', '')
         )
         return jsonify({'success': True, 'content': text})
     except Exception as e:
