@@ -425,8 +425,10 @@
                     document.getElementById('d-marks').value = document.getElementById('marks').value;
                     document.getElementById('d-cont').value = data.content;
                     document.getElementById('dlBtn').style.display = 'block';
+                } else {
+                    alert("Backend Error: " + data.error);
                 }
-            } catch (e) { alert("Error connecting"); }
+            } catch (e) { alert("Error connecting to server or processing request: " + e.message); }
 
             btn.disabled = false; loading.style.display = 'none'; pContent.style.opacity = '1';
         }
