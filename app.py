@@ -127,9 +127,9 @@ def generate():
     data = request.json
     
     # Extract data from UI
-    subject = data.get('subject', 'General')
-    grade = data.get('grade', 'XII')
-    test_name = data.get('testName', 'Revision Test')
+    subject = data.get('subject', 'Business Studies')
+    grade = data.get('grade', 'XI IEC & PEC')
+    test_name = data.get('testName', 'Revision Test - XI')
     year = data.get('year', '2025-26')
     time = data.get('time', '40min')
     marks = data.get('marks', '20')

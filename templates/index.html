@@ -197,8 +197,16 @@
         @media (max-width: 767px) {
             body { overflow: auto; height: auto; } /* Allow scrolling entire page on mobile */
             
-            .sidebar { width: 100%; height: auto; }
+            .sidebar { width: 100%; height: auto; padding: 15px; }
             
+            .form-grid {
+                grid-template-columns: 1fr; /* Stack form inputs vertically on mobile */
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .form-group { margin-bottom: 12px; }
+
             .preview-container { 
                 padding: 10px; 
                 height: auto; 
@@ -206,13 +214,18 @@
             }
 
             .paper-sheet {
-                padding: 15mm;
-                font-size: 90%; /* Scale text slightly down for small screens */
-                min-height: 400px; /* Smaller visual height on phone */
+                padding: 15px; /* Safely keep spacing within phone screen */
+                font-size: 14px; /* Scale down text slightly */
+                min-height: 400px; /* Shorter visual height */
             }
             
-            .school-name { font-size: 12pt; }
-            .location { font-size: 10pt; }
+            .school-name { font-size: 14px; }
+            .sub-header { font-size: 11px; }
+            .location { font-size: 12px; margin-bottom: 10px; }
+            .exam-title { font-size: 14px; margin: 10px 0; }
+            
+            .meta-table td { font-size: 12px; }
+            #paper-content { font-size: 13px; }
         }
     </style>
 </head>
@@ -224,11 +237,48 @@
         <div class="form-grid">
             <div class="form-group">
                 <label>Subject</label>
-                <input type="text" id="subject" value="Business Studies">
+                <select id="subject">
+                    <option value="English Core">English Core</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="Accountancy">Accountancy</option>
+                    <option value="Business Studies" selected>Business Studies</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Informatics Practices">Informatics Practices</option>
+                    <option value="Physical Education">Physical Education</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Political Science">Political Science</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Psychology">Psychology</option>
+                    <option value="Sociology">Sociology</option>
+                    <option value="Entrepreneurship">Entrepreneurship</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Class/Section</label>
-                <input type="text" id="grade" value="XII IEC & PEC">
+                <select id="grade">
+                    <optgroup label="Class XI">
+                        <option value="XI IEC & PEC" selected>XI IEC &amp; PEC</option>
+                        <option value="XI IEC">XI IEC</option>
+                        <option value="XI PEC">XI PEC</option>
+                        <option value="XI MEC">XI MEC</option>
+                        <option value="XI MPC">XI MPC</option>
+                        <option value="XI BiPC">XI BiPC</option>
+                        <option value="XI CEC">XI CEC</option>
+                    </optgroup>
+                    <optgroup label="Class XII">
+                        <option value="XII IEC & PEC">XII IEC &amp; PEC</option>
+                        <option value="XII IEC">XII IEC</option>
+                        <option value="XII PEC">XII PEC</option>
+                        <option value="XII MEC">XII MEC</option>
+                        <option value="XII MPC">XII MPC</option>
+                        <option value="XII BiPC">XII BiPC</option>
+                        <option value="XII CEC">XII CEC</option>
+                    </optgroup>
+                </select>
             </div>
         </div>
 
@@ -283,7 +333,7 @@
             <div class="header-text sub-header">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
             <div class="header-text location">VIDHYASHRAM – BHIMAVARAM-534201</div>
             
-            <div class="header-text exam-title"><span id="p-testName">Revision Test</span> – <span id="p-year">2025-26</span></div>
+            <div class="header-text exam-title"><span id="p-testName">Revision Test - XI</span> – <span id="p-year">2025-26</span></div>
 
             <table class="meta-table">
                 <tr>
@@ -291,7 +341,7 @@
                     <td class="text-right">Time: <span id="p-time">40min</span></td>
                 </tr>
                 <tr>
-                    <td>Class: <span id="p-grade">XII</span></td>
+                    <td>Class: <span id="p-grade">XI IEC & PEC</span></td>
                     <td class="text-right">Marks: <span id="p-marks">20</span></td>
                 </tr>
             </table>
