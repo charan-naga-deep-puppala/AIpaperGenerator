@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI PaperGen | Professional</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -15,89 +16,207 @@
             --text: #1e293b;
         }
 
-        body { 
-            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-ui); 
-            display: flex; height: 100vh; overflow: hidden;
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-ui);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* SIDEBAR */
         .sidebar {
-            width: 400px; background: white; padding: 25px; border-right: 1px solid #cbd5e1;
-            display: flex; flex-direction: column; gap: 15px; overflow-y: auto; z-index: 10;
+            width: 400px;
+            background: white;
+            padding: 25px;
+            border-right: 1px solid #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            z-index: 10;
         }
 
-        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
-        
-        label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: block; }
-        
-        input, select, textarea {
-            width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
-            font-size: 0.9rem; font-family: 'Inter', sans-serif;
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
         }
 
         /* Checkbox Area */
         .checkbox-container {
-            border: 1px solid #cbd5e1; border-radius: 6px; height: 120px; 
-            overflow-y: auto; padding: 10px; background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            height: 120px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #fff;
         }
-        .checkbox-item { display: flex; align-items: center; margin-bottom: 5px; }
-        .checkbox-item input { width: auto; margin-right: 8px; }
-        .checkbox-item label { text-transform: none; color: var(--text); font-weight: 400; margin: 0; }
 
-        .row { display: flex; gap: 10px; }
-        .col { flex: 1; }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .checkbox-item label {
+            text-transform: none;
+            color: var(--text);
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .col {
+            flex: 1;
+        }
 
         button {
-            background: var(--primary); color: white; border: none; padding: 14px;
-            border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
         }
-        button:hover { background: #1d4ed8; }
-        .btn-dl { background: #fff; color: var(--text); border: 1px solid #cbd5e1; display: none; }
-        .btn-dl:hover { background: #f8fafc; }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-dl {
+            background: #fff;
+            color: var(--text);
+            border: 1px solid #cbd5e1;
+            display: none;
+        }
+
+        .btn-dl:hover {
+            background: #f8fafc;
+        }
 
         /* PREVIEW AREA */
         .preview-area {
-            flex: 1; background: #e2e8f0; padding: 40px; overflow-y: auto;
-            display: flex; justify-content: center;
+            flex: 1;
+            background: #e2e8f0;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
         }
 
         /* THE EXAM PAPER */
         .paper {
-            background: white; width: 100%; max-width: 210mm; min-height: 297mm;
-            padding: 20mm; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            font-family: 'Times New Roman', Times, serif; color: #000;
+            background: white;
+            width: 100%;
+            max-width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-family: 'Times New Roman', Times, serif;
+            color: #000;
         }
 
         /* Paper Header - Centered */
-        .ph-center { text-align: center; line-height: 1.3; }
-        .ph-school { font-size: 16pt; font-weight: bold; }
-        .ph-sub { font-size: 10pt; }
-        .ph-loc { font-size: 12pt; font-weight: bold; margin-bottom: 15px; }
-        
-        .ph-exam { font-size: 14pt; font-weight: bold; margin: 20px 0; text-decoration: underline; }
+        .ph-center {
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .ph-school {
+            font-size: 16pt;
+            font-weight: bold;
+        }
+
+        .ph-sub {
+            font-size: 10pt;
+        }
+
+        .ph-loc {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .ph-exam {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 20px 0;
+            text-decoration: underline;
+        }
 
         /* Meta Table */
-        .ph-table { width: 100%; border-top: 2px solid black; border-bottom: 2px solid black; margin-bottom: 25px; border-collapse: collapse; }
-        .ph-table td { padding: 8px 0; font-size: 12pt; font-weight: bold; vertical-align: bottom; }
-        .ph-right { text-align: right; }
+        .ph-table {
+            width: 100%;
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            margin-bottom: 25px;
+            border-collapse: collapse;
+        }
+
+        .ph-table td {
+            padding: 8px 0;
+            font-size: 12pt;
+            font-weight: bold;
+            vertical-align: bottom;
+        }
+
+        .ph-right {
+            text-align: right;
+        }
 
         /* CONTENT STYLING - LEFT ALIGNED */
         #p-content {
             font-size: 12pt;
             line-height: 1.5;
-            text-align: left; /* Crucial: Questions are left aligned */
+            text-align: left;
+            /* Crucial: Questions are left aligned */
         }
 
         /* Specific styles for detected content */
-        .paper-section { 
-            text-align: center; 
-            font-weight: bold; 
-            margin-top: 25px; 
-            margin-bottom: 10px; 
+        .paper-section {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
             font-size: 13pt;
             text-transform: uppercase;
         }
-        
+
         .paper-instructions {
             font-style: italic;
             margin-bottom: 20px;
@@ -110,75 +229,29 @@
             text-align: justify;
         }
 
-<<<<<<< HEAD
-        #loading { 
-            text-align: center; 
-            display: none; 
-            color: var(--primary); 
-            margin-top: 10px; 
-            font-weight: 500;
-        }
-
-        /* --- DESKTOP VIEW (Min-width: 768px) --- */
-        @media (min-width: 768px) {
-            body { flex-direction: row; }
-            
-            .sidebar {
-                width: 380px;
-                height: 100vh;
-                border-right: 1px solid var(--border);
-                border-bottom: none;
-            }
-
-            .preview-container {
-                height: 100vh;
-                padding: 40px;
-            }
-        }
-
-        /* --- MOBILE TWEAKS --- */
-        @media (max-width: 767px) {
-            body { overflow: auto; height: auto; } /* Allow scrolling entire page on mobile */
-            
-            .sidebar { width: 100%; height: auto; padding: 15px; }
-            
-            .form-grid {
-                grid-template-columns: 1fr; /* Stack form inputs vertically on mobile */
-                gap: 12px;
-                margin-bottom: 12px;
-            }
-            
-            .form-group { margin-bottom: 12px; }
-
-            .preview-container { 
-                padding: 10px; 
-                height: auto; 
-                min-height: 500px;
-            }
-
-            .paper-sheet {
-                padding: 15px; /* Safely keep spacing within phone screen */
-                font-size: 14px; /* Scale down text slightly */
-                min-height: 400px; /* Shorter visual height */
-            }
-            
-            .school-name { font-size: 14px; }
-            .sub-header { font-size: 11px; }
-            .location { font-size: 12px; margin-bottom: 10px; }
-            .exam-title { font-size: 14px; margin: 10px 0; }
-            
-            .meta-table td { font-size: 12px; }
-            #paper-content { font-size: 13px; }
-=======
         @media (max-width: 900px) {
-            body { flex-direction: column; overflow: auto; }
-            .sidebar { width: 100%; height: auto; }
-            .preview-area { padding: 10px; }
-            .paper { padding: 15mm; height: auto; }
->>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .preview-area {
+                padding: 10px;
+            }
+
+            .paper {
+                padding: 15mm;
+                height: auto;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar">
@@ -186,9 +259,8 @@
 
         <div><label>Subject</label><select id="subject" onchange="updateBooks()"></select></div>
         <div><label>Book</label><select id="book" onchange="updateChapters()"></select></div>
-        
-<<<<<<< HEAD
-        <div class="form-grid">
+
+        <<<<<<< HEAD <div class="form-grid">
             <div class="form-group">
                 <label>Subject</label>
                 <select id="subject">
@@ -234,37 +306,43 @@
                     </optgroup>
                 </select>
             </div>
-=======
-        <div>
-            <label>Select Chapters</label>
-            <div id="chapter-container" class="checkbox-container"></div>
->>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
-        </div>
+            =======
+            <div>
+                <label>Select Chapters</label>
+                <div id="chapter-container" class="checkbox-container"></div>
+                >>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
+            </div>
 
-        <div class="row">
-            <div class="col"><label>Difficulty</label><select id="difficulty"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></div>
-            <div class="col"><label>Test Name</label><input type="text" id="testName" value="Revision Test - I"></div>
-        </div>
-        <div class="row">
-            <div class="col"><label>Time</label><input type="text" id="time" value="45 mins"></div>
-            <div class="col"><label>Max Marks</label><input type="text" id="marks" value="25"></div>
-        </div>
+            <div class="row">
+                <div class="col"><label>Difficulty</label><select id="difficulty">
+                        <option>Easy</option>
+                        <option selected>Medium</option>
+                        <option>Hard</option>
+                    </select></div>
+                <div class="col"><label>Test Name</label><input type="text" id="testName" value="Revision Test - I">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Time</label><input type="text" id="time" value="45 mins"></div>
+                <div class="col"><label>Max Marks</label><input type="text" id="marks" value="25"></div>
+            </div>
 
-        <div><label>Instructions / Prompt</label><textarea id="prompt" placeholder="Ex: 5 MCQs, 3 Short Answer..."></textarea></div>
+            <div><label>Instructions / Prompt</label><textarea id="prompt"
+                    placeholder="Ex: 5 MCQs, 3 Short Answer..."></textarea></div>
 
-        <button onclick="generate()">Generate Paper</button>
-        <div id="loading" style="display:none; text-align:center; padding:10px;">Generating...</div>
+            <button onclick="generate()">Generate Paper</button>
+            <div id="loading" style="display:none; text-align:center; padding:10px;">Generating...</div>
 
-        <form id="dlForm" action="/download" method="POST" target="_blank">
-            <input type="hidden" name="subject" id="d-sub">
-            <input type="hidden" name="grade" value="XII">
-            <input type="hidden" name="testName" id="d-test">
-            <input type="hidden" name="year" value="2025-26">
-            <input type="hidden" name="time" id="d-time">
-            <input type="hidden" name="marks" id="d-marks">
-            <input type="hidden" name="content" id="d-cont">
-            <button type="submit" class="btn-dl" id="dlBtn">Download Word Doc</button>
-        </form>
+            <form id="dlForm" action="/download" method="POST" target="_blank">
+                <input type="hidden" name="subject" id="d-sub">
+                <input type="hidden" name="grade" value="XII">
+                <input type="hidden" name="testName" id="d-test">
+                <input type="hidden" name="year" value="2025-26">
+                <input type="hidden" name="time" id="d-time">
+                <input type="hidden" name="marks" id="d-marks">
+                <input type="hidden" name="content" id="d-cont">
+                <button type="submit" class="btn-dl" id="dlBtn">Download Word Doc</button>
+            </form>
     </div>
 
     <div class="preview-area">
@@ -272,33 +350,33 @@
             <div class="ph-center ph-school">BHARATIYA VIDYA BHAVAN’S RESIDENTIAL PUBLIC SCHOOL</div>
             <div class="ph-center ph-sub">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
             <div class="ph-center ph-loc">VIDHYASHRAM – BHIMAVARAM-534201</div>
-            
-<<<<<<< HEAD
-            <div class="header-text exam-title"><span id="p-testName">Revision Test - XI</span> – <span id="p-year">2025-26</span></div>
-=======
-            <div class="ph-center ph-exam"><span id="p-testName">Revision Test - I</span> – 2025-26</div>
->>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
 
-            <table class="ph-table">
-                <tr>
-                    <td>Sub: <span id="p-sub">Economics</span></td>
-                    <td class="ph-right">Time: <span id="p-time">45 mins</span></td>
-                </tr>
-                <tr>
-<<<<<<< HEAD
-                    <td>Class: <span id="p-grade">XI IEC & PEC</span></td>
+            <<<<<<< HEAD <div class="header-text exam-title"><span id="p-testName">Revision Test - XI</span> – <span
+                    id="p-year">2025-26</span>
+        </div>
+        =======
+        <div class="ph-center ph-exam"><span id="p-testName">Revision Test - I</span> – 2025-26</div>
+        >>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
+
+        <table class="ph-table">
+            <tr>
+                <td>Sub: <span id="p-sub">Economics</span></td>
+                <td class="ph-right">Time: <span id="p-time">45 mins</span></td>
+            </tr>
+            <tr>
+                <<<<<<< HEAD <td>Class: <span id="p-grade">XI IEC & PEC</span></td>
                     <td class="text-right">Marks: <span id="p-marks">20</span></td>
-=======
+                    =======
                     <td>Class: XII</td>
                     <td class="ph-right">Max Marks: <span id="p-marks">25</span></td>
->>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
-                </tr>
-            </table>
+                    >>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
+            </tr>
+        </table>
 
-            <div id="p-content">
-                <i style="color:#888;">Select chapters and click Generate to see the paper here...</i>
-            </div>
+        <div id="p-content">
+            <i style="color:#888;">Select chapters and click Generate to see the paper here...</i>
         </div>
+    </div>
     </div>
 
     <script>
@@ -341,12 +419,12 @@
 
         async function generate() {
             const chaps = Array.from(document.querySelectorAll('input[name="chapters"]:checked')).map(c => c.value).join(", ");
-            if(!chaps) return alert("Select at least one chapter");
+            if (!chaps) return alert("Select at least one chapter");
 
             const btn = document.querySelector('button');
             const loading = document.getElementById('loading');
             const pContent = document.getElementById('p-content');
-            
+
             // Sync Header
             document.getElementById('p-sub').innerText = subSel.value;
             document.getElementById('p-testName').innerText = document.getElementById('testName').value;
@@ -358,7 +436,7 @@
             try {
                 const res = await fetch('/generate', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         subject: subSel.value, book: bookSel.value, chapters: chaps,
                         difficulty: document.getElementById('difficulty').value,
@@ -368,19 +446,19 @@
                     })
                 });
                 const data = await res.json();
-                
-                if(data.success) {
+
+                if (data.success) {
                     // Smart Formatting
                     let formattedHTML = "";
                     const lines = data.content.split('\n');
-                    
+
                     lines.forEach(line => {
                         line = line.trim();
-                        if(!line) return;
+                        if (!line) return;
 
-                        if(line.toUpperCase().includes("SECTION") || line.toUpperCase().includes("PART ")) {
+                        if (line.toUpperCase().includes("SECTION") || line.toUpperCase().includes("PART ")) {
                             formattedHTML += `<div class="paper-section">${line}</div>`;
-                        } else if(line.toUpperCase().includes("GENERAL INSTRUCTIONS")) {
+                        } else if (line.toUpperCase().includes("GENERAL INSTRUCTIONS")) {
                             formattedHTML += `<div class="paper-section" style="font-size:12pt; text-decoration:underline;">${line}</div>`;
                         } else {
                             // Standard question
@@ -389,7 +467,7 @@
                     });
 
                     pContent.innerHTML = formattedHTML;
-                    
+
                     document.getElementById('d-sub').value = subSel.value;
                     document.getElementById('d-test').value = document.getElementById('testName').value;
                     document.getElementById('d-time').value = document.getElementById('time').value;
@@ -397,10 +475,11 @@
                     document.getElementById('d-cont').value = data.content;
                     document.getElementById('dlBtn').style.display = 'block';
                 }
-            } catch(e) { alert("Error connecting"); }
-            
+            } catch (e) { alert("Error connecting"); }
+
             btn.disabled = false; loading.style.display = 'none'; pContent.style.opacity = '1';
         }
     </script>
 </body>
+
 </html>
