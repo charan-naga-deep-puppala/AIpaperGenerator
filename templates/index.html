@@ -257,61 +257,19 @@
     <div class="sidebar">
         <div class="logo">📄 PaperGen Pro</div>
 
+        <div>
+            <label>Class/Section</label>
+            <select id="grade">
+                <option value="XI MEC">XI MEC</option>
+                <option value="XII MEC">XII MEC</option>
+            </select>
+        </div>
         <div><label>Subject</label><select id="subject" onchange="updateBooks()"></select></div>
         <div><label>Book</label><select id="book" onchange="updateChapters()"></select></div>
-
-        <<<<<<< HEAD <div class="form-grid">
-            <div class="form-group">
-                <label>Subject</label>
-                <select id="subject">
-                    <option value="English Core">English Core</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Biology">Biology</option>
-                    <option value="Accountancy">Accountancy</option>
-                    <option value="Business Studies" selected>Business Studies</option>
-                    <option value="Economics">Economics</option>
-                    <option value="Informatics Practices">Informatics Practices</option>
-                    <option value="Physical Education">Physical Education</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Political Science">Political Science</option>
-                    <option value="History">History</option>
-                    <option value="Geography">Geography</option>
-                    <option value="Psychology">Psychology</option>
-                    <option value="Sociology">Sociology</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Class/Section</label>
-                <select id="grade">
-                    <optgroup label="Class XI">
-                        <option value="XI IEC & PEC" selected>XI IEC &amp; PEC</option>
-                        <option value="XI IEC">XI IEC</option>
-                        <option value="XI PEC">XI PEC</option>
-                        <option value="XI MEC">XI MEC</option>
-                        <option value="XI MPC">XI MPC</option>
-                        <option value="XI BiPC">XI BiPC</option>
-                        <option value="XI CEC">XI CEC</option>
-                    </optgroup>
-                    <optgroup label="Class XII">
-                        <option value="XII IEC & PEC">XII IEC &amp; PEC</option>
-                        <option value="XII IEC">XII IEC</option>
-                        <option value="XII PEC">XII PEC</option>
-                        <option value="XII MEC">XII MEC</option>
-                        <option value="XII MPC">XII MPC</option>
-                        <option value="XII BiPC">XII BiPC</option>
-                        <option value="XII CEC">XII CEC</option>
-                    </optgroup>
-                </select>
-            </div>
-            =======
-            <div>
-                <label>Select Chapters</label>
-                <div id="chapter-container" class="checkbox-container"></div>
-                >>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
-            </div>
+        <div>
+            <label>Select Chapters</label>
+            <div id="chapter-container" class="checkbox-container"></div>
+        </div>
 
             <div class="row">
                 <div class="col"><label>Difficulty</label><select id="difficulty">
@@ -335,7 +293,7 @@
 
             <form id="dlForm" action="/download" method="POST" target="_blank">
                 <input type="hidden" name="subject" id="d-sub">
-                <input type="hidden" name="grade" value="XII">
+                <input type="hidden" name="grade" id="d-grade" value="XII MEC">
                 <input type="hidden" name="testName" id="d-test">
                 <input type="hidden" name="year" value="2025-26">
                 <input type="hidden" name="time" id="d-time">
@@ -351,12 +309,7 @@
             <div class="ph-center ph-sub">(Sponsored by rice millers’ education and cultural society, W.G.Dt)</div>
             <div class="ph-center ph-loc">VIDHYASHRAM – BHIMAVARAM-534201</div>
 
-            <<<<<<< HEAD <div class="header-text exam-title"><span id="p-testName">Revision Test - XI</span> – <span
-                    id="p-year">2025-26</span>
-        </div>
-        =======
-        <div class="ph-center ph-exam"><span id="p-testName">Revision Test - I</span> – 2025-26</div>
-        >>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
+            <div class="ph-center ph-exam"><span id="p-testName">Revision Test - I</span> – 2025-26</div>
 
         <table class="ph-table">
             <tr>
@@ -364,12 +317,8 @@
                 <td class="ph-right">Time: <span id="p-time">45 mins</span></td>
             </tr>
             <tr>
-                <<<<<<< HEAD <td>Class: <span id="p-grade">XI IEC & PEC</span></td>
-                    <td class="text-right">Marks: <span id="p-marks">20</span></td>
-                    =======
-                    <td>Class: XII</td>
-                    <td class="ph-right">Max Marks: <span id="p-marks">25</span></td>
-                    >>>>>>> efced5c747e90f7cec22ad645c74176dea9b9213
+                <td>Class: <span id="p-grade">XI MEC</span></td>
+                <td class="ph-right">Max Marks: <span id="p-marks">25</span></td>
             </tr>
         </table>
 
@@ -427,6 +376,7 @@
 
             // Sync Header
             document.getElementById('p-sub').innerText = subSel.value;
+            document.getElementById('p-grade').innerText = document.getElementById('grade').value;
             document.getElementById('p-testName').innerText = document.getElementById('testName').value;
             document.getElementById('p-time').innerText = document.getElementById('time').value;
             document.getElementById('p-marks').innerText = document.getElementById('marks').value;
@@ -440,7 +390,7 @@
                     body: JSON.stringify({
                         subject: subSel.value, book: bookSel.value, chapters: chaps,
                         difficulty: document.getElementById('difficulty').value,
-                        grade: "XII", testName: document.getElementById('testName').value,
+                        grade: document.getElementById('grade').value, testName: document.getElementById('testName').value,
                         time: document.getElementById('time').value, marks: document.getElementById('marks').value,
                         prompt: document.getElementById('prompt').value
                     })
@@ -469,6 +419,7 @@
                     pContent.innerHTML = formattedHTML;
 
                     document.getElementById('d-sub').value = subSel.value;
+                    document.getElementById('d-grade').value = document.getElementById('grade').value;
                     document.getElementById('d-test').value = document.getElementById('testName').value;
                     document.getElementById('d-time').value = document.getElementById('time').value;
                     document.getElementById('d-marks').value = document.getElementById('marks').value;
